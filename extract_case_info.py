@@ -10,7 +10,9 @@ import openai
 import pdfplumber
 
 
-openai.api_key = 'your-api-key'
+f = open("openai_api_key.txt","r")
+openai_api_key = f.read()
+f.close()
 
 
 def extract_text_from_pdf(pdf_path):
@@ -23,5 +25,16 @@ def extract_text_from_pdf(pdf_path):
 def extract_case_info(lawyer_name, case_number):
     text = extract_text_from_pdf(lawyer_name+"/"+case_number+".pdf")
     
-    print(text)
+    def process_text_with_openai(text):
+        response = openai.Completion.create(
+            model="text-davinci-003",
+            prompt=text,
+            max_tokens=150
+        )
+        return response.choices[0].text.strip()
+    
+    pdf_text = extract_text_from_pdf("your-document.pdf")
+    result = process_text_with_openai(pdf_text)
+    print(result)
+
     
