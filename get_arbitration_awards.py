@@ -10,18 +10,9 @@ import requests
 import os
 
 def get_arbitration_awards(lawyer_name):
-    files = finra_search(lawyer_name)
+    case_numbers = get_arbitration_case_numbers(lawyer_name)
     
-def finra_search(lawyer_name):
-    response = requests.get("https://www.finra.org/arbitration-mediation/arbitration-awards-online?aao_radios=all&field_case_id_text=&search="+lawyer_name+"&field_forum_tax=All&field_special_case_type_tax=All&field_core_official_dt%5Bmin%5D=&field_core_official_dt%5Bmax%5D=").text
-    
-    pdf_names = response.split('/sites/default/files/aao_documents/')
-    pdf_names = pdf_names[1:]
-    for i,name in enumerate(pdf_names):
-        pdf_names[i] = name.split(".pdf")[0]
-    
-    
-    for name in pdf_names:
+    for name in case_numbers:
         if not os.path.exists(lawyer_name):
             os.makedirs(lawyer_name)
         url = "https://www.finra.org/sites/default/files/aao_documents/"+name+".pdf"
@@ -31,3 +22,13 @@ def finra_search(lawyer_name):
             pdf_object.write(response.content)
             
     print("Done downloading all arbitration awards for "+lawyer_name)
+    
+def get_arbitration_case_numbers(lawyer_name):
+    response = requests.get("https://www.finra.org/arbitration-mediation/arbitration-awards-online?aao_radios=all&field_case_id_text=&search="+lawyer_name+"&field_forum_tax=All&field_special_case_type_tax=All&field_core_official_dt%5Bmin%5D=&field_core_official_dt%5Bmax%5D=").text
+    
+    case_numbers = response.split('/sites/default/files/aao_documents/')
+    case_numbers = case_numbers[1:]
+    for i,name in enumerate(case_numbers):
+        case_numbers[i] = name.split(".pdf")[0]
+        
+    return case_numbers
