@@ -10,11 +10,12 @@ import requests
 import os
 
 def get_arbitration_awards(lawyer_name):
+    if not os.path.exists(lawyer_name):
+        os.makedirs(lawyer_name)
+        
     case_numbers = get_arbitration_case_numbers(lawyer_name)
     
     for name in case_numbers:
-        if not os.path.exists(lawyer_name):
-            os.makedirs(lawyer_name)
         url = "https://www.finra.org/sites/default/files/aao_documents/"+name+".pdf"
         response = requests.get(url)
         filepath = lawyer_name+"/"+name+".pdf"
