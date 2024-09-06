@@ -9,6 +9,7 @@ Created on Wed Sep  4 13:08:41 2024
 from openai import OpenAI
 import os
 import pdfplumber
+import csv
 
 
 f = open("openai_api_key.txt","r")
@@ -46,6 +47,29 @@ def extract_case_info(lawyer_name, case_number):
     
     pdf_text = extract_text_from_pdf("Awards/"+lawyer_name+"/"+case_number+".pdf")
     result = process_text_with_openai(pdf_text)
-    print(result)
+    return result
+    
+
+def extract_lawyer_cases(lawyer_name):
+    folder_name = "Awards/"+lawyer_name
+    filenames = os.listdir(folder_name)
+    filenames = filenames[0:3]
+    case_numbers = [file.split('.')[0] for file in filenames]
+    print(case_numbers)
+    
+    case_info_dict = {}
+    for case in case_numbers:
+        case_info_dict[case] = extract_case_info(lawyer_name,case)
+    
+    return case_info_dict
+        
+        
+def save_lawyer_cases(lawyer_name):
+    case_info_dict = extract_lawyer_cases(lawyer_name)
+    w = csv.writer(open(lawyer_name+".csv", "w"))
+
+    for case, info in case_info_dict.items():
+        w.writerow([case, info])
+    
 
     
