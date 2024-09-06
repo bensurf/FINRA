@@ -10,17 +10,18 @@ import requests
 import os
 
 def get_arbitration_awards(lawyer_name):
-    if not os.path.exists(lawyer_name):
-        os.makedirs(lawyer_name)
+    if not os.path.exists("Awards/"+lawyer_name):
+        os.makedirs("Awards/"+lawyer_name)
         
     case_numbers = get_arbitration_case_numbers(lawyer_name)
     
     for name in case_numbers:
-        url = "https://www.finra.org/sites/default/files/aao_documents/"+name+".pdf"
-        response = requests.get(url)
-        filepath = lawyer_name+"/"+name+".pdf"
-        with open(filepath, 'wb') as pdf_object:
-            pdf_object.write(response.content)
+        filepath = "Awards/"+lawyer_name+"/"+name+".pdf"
+        if not os.path.exists(filepath):
+            url = "https://www.finra.org/sites/default/files/aao_documents/"+name+".pdf"
+            response = requests.get(url)
+            with open(filepath, 'wb') as pdf_object:
+                pdf_object.write(response.content)
             
     print("Done downloading all arbitration awards for "+lawyer_name)
     

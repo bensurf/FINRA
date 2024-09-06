@@ -44,7 +44,7 @@ def extract_case_info(lawyer_name, case_number):
         )
         return chat_completion.choices[0].message.content
     
-    pdf_text = extract_text_from_pdf(lawyer_name+"/"+case_number+".pdf")
+    pdf_text = extract_text_from_pdf("Awards/"+lawyer_name+"/"+case_number+".pdf")
     result = process_text_with_openai(pdf_text)
     print(result)
 
