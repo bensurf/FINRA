@@ -53,7 +53,7 @@ def extract_case_info(lawyer_name, case_number):
 def extract_lawyer_cases(lawyer_name):
     folder_name = "Awards/"+lawyer_name
     filenames = os.listdir(folder_name)
-    filenames = filenames[0:3]
+    #filenames = filenames[0:3]
     case_numbers = [file.split('.')[0] for file in filenames]
     print(case_numbers)
     
